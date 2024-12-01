@@ -10,11 +10,31 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const getToken = localStorage.getItem("token");
-    if (getToken) {
-      navigate("/");
-    }
-  }, []);
+    const fetchData = async () => {
+      const getToken = localStorage.getItem("token");
+
+      if (!getToken) {
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const response = await axios.get(`http://localhost:8000/api/verify`, {
+          headers: { Authorization: getToken },
+        });
+        console.log(response);
+
+        if (response.status === 200) {
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Error verifying token:", error);
+        navigate("/login");
+      }
+    };
+
+    fetchData();
+  }, [navigate]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -27,14 +47,6 @@ function Login() {
         { email, password }
       );
       console.log(response);
-
-      if (
-        response.status === 401 ||
-        response.status === 402 ||
-        response.status === 400
-      ) {
-        return setError(response.data.message || "Login failed");
-      }
 
       const token = response.data.token;
       localStorage.setItem("token", `Bearer ${token}`);
