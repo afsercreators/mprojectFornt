@@ -1,7 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Nav() {
+  const navigate = useNavigate();
+
+  const logoutHandler = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
   return (
     <div>
       <nav className="navbar navbar-expand-lg bg-body-tertiary shadow">
@@ -22,6 +29,11 @@ function Nav() {
             </Link>
           </li>
         </ul>
+        <div className="d-flex justify-content-end">
+          <button className="btn btn-dark" onClick={logoutHandler}>
+            Logout
+          </button>
+        </div>
       </nav>
     </div>
   );

@@ -9,19 +9,52 @@ function StudentsList() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
 
-  const StudentView = () => {
-    navigate("/view");
+  const StudentView = (id) => {
+    navigate(`/view/${id}`);
+  };
+  const getStudent = async () => {
+    const response = await axios.get(`http://localhost:8000/api/student`);
+
+    setData(response.data);
+  };
+
+  const fetchData = async () => {
+    const getToken = localStorage.getItem("token");
+
+    if (!getToken) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const response = await axios.get(`http://localhost:8000/api/verify`, {
+        headers: { Authorization: getToken },
+      });
+
+      return;
+    } catch (error) {
+      console.error("Error verifying token:", error);
+      navigate("/login");
+    }
   };
 
   useEffect(() => {
-    const getStudent = async () => {
-      const response = await axios.get(`http://localhost:8000/api/student`);
-
-      setData(response.data);
-    };
-
+    fetchData();
     getStudent();
   }, []);
+
+  const deletHandler = async (id) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8000/api/student/${id}`
+      );
+
+      return;
+    } catch (error) {
+      console.error("Error verifying token:", error);
+      navigate("/login");
+    }
+  };
 
   return (
     <div className="my-5 container shadow">
@@ -44,11 +77,14 @@ function StudentsList() {
               <td scope="row">{item.dateofBirth}</td>
               <td>
                 <MdOutlinePreview
-                  onClick={(e) => StudentView()}
+                  onClick={(e) => StudentView(item._id)}
                   className="fs-5 mx-2 cursor"
                 />
                 <FaEdit className="fs-5 mx-2 cursor" />
-                <MdDeleteForever className="fs-5 mx-2 cursor" />
+                <MdDeleteForever
+                  onClick={() => deletHandler(item._id)}
+                  className="fs-5 mx-2 cursor"
+                />
               </td>
             </tr>
           ))}
