@@ -1,6 +1,7 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 import Students from "./Components/Students";
 import Login from "./Components/Login";
@@ -19,6 +20,7 @@ function App() {
         <Route path="/view/:id" element={<StudentView />} />
         <Route path="*" element={<Students />} />
       </Routes>
+      <ToastContainer />
     </>
   );
 }

@@ -58,6 +58,11 @@ function Login() {
     }
   };
 
+  const setValue = () => {
+    setEmail("abc10@gmail.com");
+    setPassword("123456");
+  };
+
   return (
     <div className="my-5 container">
       <p className="fw-bold text-center text-success border-bottom border-3 border-danger">
@@ -92,6 +97,13 @@ function Login() {
         <p className="text-danger">{error}</p>
         <button type="submit" className="btn btn-success">
           Submit
+        </button>
+        <button
+          onClick={setValue}
+          type="submit"
+          className="btn btn-primary ms=3"
+        >
+          set
         </button>
       </form>
     </div>
